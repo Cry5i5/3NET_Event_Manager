@@ -1,0 +1,79 @@
+﻿@model _3NET_EventManagement.Models.Event
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Event</legend>
+
+        <div class="editor-label form_label">
+            @Html.LabelFor(model => model.EventName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.EventName)
+            @Html.ValidationMessageFor(model => model.EventName)
+        </div>
+
+        <div class="editor-label form_label">
+            @Html.LabelFor(model => model.Address)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Address)
+            @Html.ValidationMessageFor(model => model.Address)
+        </div>
+
+        <div class="editor-label form_label">
+            @Html.LabelFor(model => model.Date)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Date)
+            @Html.ValidationMessageFor(model => model.Date)
+        </div>
+
+        <div class="editor-label form_label">
+            @Html.LabelFor(model => model.Summary)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Summary)
+            @Html.ValidationMessageFor(model => model.Summary)
+        </div>
+
+        
+        @if (Roles.GetRolesForUser(User.Identity.Name).Contains("admin"))
+{
+    <div class="editor-label form_label">
+        @Html.LabelFor(model => model.StatusId, "Status")
+    </div>
+        <div class="editor-field">
+            @Html.DropDownList("StatusId", String.Empty)
+            @Html.ValidationMessageFor(model => model.StatusId)
+        </div>
+        }
+        <div class="editor-label form_label">
+            @Html.LabelFor(model => model.TypeId, "Type")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("TypeId", String.Empty)
+            @Html.ValidationMessageFor(model => model.TypeId)
+        </div>
+        <br />
+        <p>
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

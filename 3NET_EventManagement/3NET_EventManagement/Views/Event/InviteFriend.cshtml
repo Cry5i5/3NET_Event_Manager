@@ -1,0 +1,30 @@
+﻿@model _3NET_EventManagement.Models.InviteFriendModel
+@{
+    ViewBag.Title = "Invite a friend to your event";
+}
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+        <div class="form-group">
+            @Html.LabelFor(model => model.FriendUserId, "Select a friend", new { @class = "control-label col-md-2" })
+            <br />
+            <div class="col-md-10">
+                @Html.DropDownList("FriendUserId", String.Empty)
+                @Html.ValidationMessageFor(model => model.FriendUserId)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add Friend" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>

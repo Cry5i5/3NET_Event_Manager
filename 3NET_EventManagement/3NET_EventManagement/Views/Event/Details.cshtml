@@ -1,0 +1,149 @@
+﻿@model _3NET_EventManagement.Models.Event
+
+@{
+    ViewBag.Title = "Details for event";
+}
+
+<h2> @Html.DisplayFor(model => model.EventName) </h2>
+
+<fieldset>
+    <legend>Event</legend>
+    <ul style="display:inline-flexbox; text-decoration:none; list-style-type:none;">
+        <li style="display:inline;"></li>
+        <li style="display:inline;"></li>
+        <li style="display:inline;"></li>
+    </ul>
+    <table class="table table-striped">
+        <tr class="info">
+            <th>
+              Type : @Html.DisplayFor(model => model.Type.TypeName)
+            </th>
+            <th>
+               Address :  @Html.DisplayFor(model => model.Address)
+            </th>
+            <th>
+               Creator :  @Html.DisplayFor(model => model.Creator.UserName)
+            </th>
+            <th>
+               Date :  @Html.DisplayFor(model => model.Date)
+            </th>
+    </table>
+            @*<h3>@Html.DisplayNameFor(model => model.EventName)</h3>
+
+                <div class="display-field">
+
+                </div>
+                <h3>@Html.DisplayNameFor(model => model.Address)</h3>*@
+
+            @*<div class="display-field">
+
+            </div>
+
+            <h3>@Html.DisplayNameFor(model => model.Date)</h3>
+            <div class="display-field">
+              
+            </div>*@
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.Status.StatusName)</dt>
+        <dd>@Html.DisplayFor(model => model.Status.StatusName)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Summary)</dt>
+        <dd>@Html.DisplayFor(model => model.Summary)</dd>
+        <dt>Invited Friends</dt>
+        <dd><table class="table table-bordered">
+    @foreach (var item in Model.InvitedUsers)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+
+        </tr>
+    }
+</table></dd>
+    </dl>
+    @*<h3 style="padding-bottom:5px; border-bottom: solid black 1px;" >@Html.DisplayNameFor(model => model.Status.StatusName)</h3>
+
+    <div style="color:cornflowerblue" >
+        @Html.DisplayFor(model => model.Status.StatusName)
+    </div>
+            <h3 style="padding-bottom:5px; border-bottom: solid black 1px;">@Html.DisplayNameFor(model => model.Summary)</h3>
+
+            <div class="display-field">
+                @Html.DisplayFor(model => model.Summary)
+            </div>*@
+            @*<h3>Creator</h3>
+            <div class="display-field">
+               
+            </div>*@
+          
+            @*<h3>@Html.DisplayNameFor(model => model.Type.TypeName)</h3>
+
+            <div class="display-field">
+                @Html.DisplayFor(model => model.Type.TypeName)
+            </div>*@
+    @*<h3 style="padding-bottom:5px; border-bottom: solid black 1px;">
+        Invited Friends
+    </h3>
+    <table class="table table-bordered">
+        @foreach (var item in Model.InvitedUsers)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+
+            </tr>
+        }
+    </table>*@
+
+
+
+    <h3 style="padding-bottom:5px; border-bottom: solid black 1px;"> Contributions </h3>
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        Friend
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Amount
+                    </th>
+
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.Contributions)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Type.ContributionTypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+
+
+                        <td></td>
+
+                    </tr>
+                }
+
+            </table>
+</fieldset>
+<br />
+<p>
+    @*@Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |*@
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</p>

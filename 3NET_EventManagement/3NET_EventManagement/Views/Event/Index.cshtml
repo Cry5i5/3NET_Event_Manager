@@ -1,0 +1,116 @@
+﻿@model IEnumerable<_3NET_EventManagement.Models.Event>
+
+@{
+    ViewBag.Title = "My Events";
+}
+
+<h2>@ViewBag.Title</h2>
+<p style="background-color: #7ce47b; padding: 5px; border-radius:0.5em;"> Indication : you only can invite friend when your event is "Open"</p>
+<p style="float:right;">
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
+</p>
+
+<p> @ViewBag.message </p>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.EventName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Summary)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Creator.UserName) 
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status.StatusName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Type.TypeName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @if(item.Summary.Length > 10)
+                {
+                    string textTrimmed = item.Summary.Substring(0, 10);
+                    @(textTrimmed)
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Summary )
+                }
+          
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Creator.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status.StatusName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type.TypeName)
+            </td>
+            <td>
+
+                @if (item.CreatorId == WebSecurity.GetUserId(User.Identity.Name) || Roles.GetRolesForUser(User.Identity.Name).Contains("admin"))
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-info btn-sm" })
+                }
+                @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-default btn-sm" })
+
+                @if (item.CreatorId == WebSecurity.GetUserId(User.Identity.Name) || Roles.GetRolesForUser(User.Identity.Name).Contains("admin"))
+                {
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" })
+                }
+
+                @if (item.CreatorId == WebSecurity.GetUserId(User.Identity.Name) && item.Status.StatusName.Equals("Open"))
+                {
+                    @Html.ActionLink("Invite Friend", "InviteFriend", new { id = item.Id }, new { @class = "btn btn-warning btn-sm" })
+                }
+
+                @if (item.InvitedUsers.Where(x => x.Id == WebSecurity.GetUserId(User.Identity.Name)).FirstOrDefault() != null)
+                {
+
+                    @Html.ActionLink("Add Contribution", "Create", "Contribution", new { id = item.Id }, new { @class="btn btn-info btn-sm" })
+                }
+                @if (Roles.GetRolesForUser(User.Identity.Name).Contains("admin") && item.Status.StatusName.Equals("Pending"))
+                {
+
+                    @Html.ActionLink("UnLock", "LockOrUnlock", "Event", new { id = item.Id }, new { @class="btn btn-success btn-sm" })
+                }
+                @if (Roles.GetRolesForUser(User.Identity.Name).Contains("admin") && item.Status.StatusName.Equals("Open"))
+                {
+
+                    @Html.ActionLink("Lock", "LockOrUnlock", "Event", new { id = item.Id }, new { @class = "btn btn-warning btn-sm" })
+                }
+                @*|
+                    @if(item.InvitedUsers.Where(x => x.Id == WebSecurity.GetUserId(User.Identity.Name)).FirstOrDefault() != null || ViewBag.isOwner == true)
+                    {
+                        @Html.ActionLink("View Contribution", "Index","Contribution", new { id=item.Id }, null )
+                    }*@
+            </td>
+        </tr>
+    }
+
+</table>

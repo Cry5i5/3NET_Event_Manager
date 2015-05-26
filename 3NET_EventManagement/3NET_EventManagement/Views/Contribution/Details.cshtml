@@ -1,0 +1,43 @@
+﻿@model _3NET_EventManagement.Models.Contribution
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Contribution</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Amount)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Amount)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Event.EventName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Event.EventName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.UserId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.UserId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Type.ContributionTypeName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Type.ContributionTypeName)
+    </div>
+</fieldset>
+<p>
+   
+    @Html.ActionLink("Back to List", "Index", new { id = Model.EventId }, new { @class = "btn btn-primary" })
+</p>

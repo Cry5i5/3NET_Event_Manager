@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>Welcome to Synchronic World</h1>
+              
+            </hgroup>
+            <p>
+                Please Login or Register to discover our community World
+            </p>
+        </div>
+    </section>
+}
+@if(Request.IsAuthenticated)
+{
+ <p style="background-color:lightgreen; padding:10px; border-radius:0.5em;"> Please complete your profile  : @Html.ActionLink("Edit Profil", "Edit", "Account",null, new { @class = "btn btn-success" })</p>   
+}
+
+<h3>Three steps to chill :</h3>
+
+<ol class="round">
+    <li class="one">
+        <h5>Organise Event</h5>
+        <br />
+    </li>
+
+    <li class="two">
+        <h5>Find Friends to invite</h5>
+        <br />
+    </li>
+    
+
+    <li class="three">
+        <h5>Add your Contribution</h5>
+        In order to have an awesome event, each friend should add his contribution !
+        <br />  
+    </li>
+</ol>

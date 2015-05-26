@@ -1,0 +1,74 @@
+﻿@model _3NET_EventManagement.Models.Contribution
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Contribution</legend>
+
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Amount)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Amount)
+            @Html.ValidationMessageFor(model => model.Amount)
+        </div>
+
+        <div class="editor-label">
+            @Html.HiddenFor(model => model.EventId)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Event.EventName)
+        </div>
+        <div class="editor-label">
+            @Html.DisplayFor(model => model.Event.EventName)
+        </div>
+       @* <div class="editor-field">
+            @Html.DropDownList("EventId", String.Empty)
+            @Html.ValidationMessageFor(model => model.EventId)
+        </div>*@
+
+        @*<div class="editor-label">
+            @Html.LabelFor(model => model.UserId)
+        </div>*@
+        <div class="editor-field">
+            @Html.HiddenFor(model => model.UserId)
+          
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.TypeId, "Type")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("TypeId", String.Empty)
+            @Html.ValidationMessageFor(model => model.TypeId)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Description)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Description)
+        </div>
+        <br />
+        <p>
+            <input type="submit" value="Edit" class="btn btn-primary" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", new { id = Model.EventId }, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
