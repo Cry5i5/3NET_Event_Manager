@@ -50,11 +50,11 @@
         <dd>@Html.DisplayFor(model => model.Summary)</dd>
         <dt>Invited Friends</dt>
         <dd><table class="table table-bordered">
-    @foreach (var item in Model.InvitedUsers)
+    @foreach (var item in Model.Invitations.Where( e => e.EventId == Model.Id).ToList())
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.UserName)
+                @Html.DisplayFor(modelItem => item.User.UserName)
             </td>
 
         </tr>

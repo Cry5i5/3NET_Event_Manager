@@ -26,7 +26,7 @@ namespace _3NET_EventManagement.Filters
             public SimpleMembershipInitializer()
             {
                 Database.SetInitializer<AppDbContext>(new System.Data.Entity.CreateDatabaseIfNotExists<AppDbContext>());
-               // Database.SetInitializer<AppDbContext>(new ApplicationDbContextInitializer());
+               //Database.SetInitializer<AppDbContext>(new ApplicationDbContextInitializer());
 
                 try
                 {
@@ -36,6 +36,7 @@ namespace _3NET_EventManagement.Filters
                         {
                             // Créer la base de données SimpleMembership sans schéma de migration Entity Framework
                             ((IObjectContextAdapter)context).ObjectContext.CreateDatabase();
+                           
                         }
                     }
 

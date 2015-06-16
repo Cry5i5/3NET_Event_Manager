@@ -19,7 +19,7 @@ namespace _3NET_EventManagement.Migrations
         protected override void Seed(_3NET_EventManagement.Models.AppDbContext context)
         {
 
-            var statuses = new List<Status>
+          /*  var statuses = new List<Status>
             {
                 new Status {Id = 1, StatusName = "Open"},
                 new Status {Id = 2, StatusName = "Pending"},
@@ -57,7 +57,7 @@ namespace _3NET_EventManagement.Migrations
                 context.EventTypes.Add(r);
             }
 
-            context.SaveChanges();
+            context.SaveChanges();*/
         }
     }
 }

@@ -21,7 +21,23 @@ namespace _3NET_EventManagement.Controllers
 
         public ActionResult Index()
         {
-            return View(db.Users.ToList());
+            if (!Roles.GetRolesForUser(User.Identity.Name).Contains("admin"))
+                return HttpNotFound();
+            if (TempData["createdUser"] != null)
+            {
+                ViewData["createdUser"] = TempData["createdUser"].ToString();
+            }
+            List<User> listOfUsers = new List<User>();
+            // On filtre pour afficher que les utilisateurs voulus
+            foreach(var item in db.Users.ToList())
+            {
+                if ( item != db.Users.Find(WebSecurity.GetUserId(User.Identity.Name)))
+                {
+                    listOfUsers.Add(item);
+                }
+            }
+
+            return View(listOfUsers);
         }
 
         //
@@ -29,6 +45,8 @@ namespace _3NET_EventManagement.Controllers
 
         public ActionResult Details(int id = 0)
         {
+            if (!Roles.GetRolesForUser(User.Identity.Name).Contains("admin"))
+                return HttpNotFound();
             User user = db.Users.Find(id);
             if (user == null)
             {
@@ -42,6 +60,8 @@ namespace _3NET_EventManagement.Controllers
 
         public ActionResult Create()
         {
+            if (!Roles.GetRolesForUser(User.Identity.Name).Contains("admin"))
+                return HttpNotFound();
             return View();
         }
 
@@ -54,13 +74,23 @@ namespace _3NET_EventManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (db.Users.Where(x => x.UserName == user.UserName).FirstOrDefault() != null)
+                if (db.Users.Where(x => x.UserName == user.UserName).FirstOrDefault() == null)
                 {
                     db.Users.Add(user);
                     db.SaveChanges();
                     WebSecurity.CreateUserAndAccount(user.UserName, "123456");
-                    Roles.AddUserToRole(user.UserName, "user");
-                    ViewData["createdUser"] = "User created with default password '123456', please contact him to give the password";
+                    // si la checkbox admin est cochée ou pas on le met en tant qu'admin ou pas.
+                    if (user.isAdmin == false)
+                    {
+                        Roles.AddUserToRole(user.UserName, "user");
+                        TempData["createdUser"] = "User created with default password '123456', please contact him to give the password";
+                    }
+                    else
+                    {
+                        Roles.AddUserToRole(user.UserName, "admin");
+                        TempData["createdUser"] = "User admin created with default password '123456', please contact him to give the password";
+                    }
+                     
                     return RedirectToAction("Index");
                 }
                 else
@@ -79,6 +109,8 @@ namespace _3NET_EventManagement.Controllers
 
         public ActionResult Edit(int id = 0)
         {
+            if (!Roles.GetRolesForUser(User.Identity.Name).Contains("admin"))
+                return HttpNotFound();
             User user = db.Users.Find(id);
             if (user == null)
             {
@@ -108,6 +140,8 @@ namespace _3NET_EventManagement.Controllers
 
         public ActionResult Delete(int id = 0)
         {
+            if (!Roles.GetRolesForUser(User.Identity.Name).Contains("admin"))
+                return HttpNotFound();
             User user = db.Users.Find(id);
             if (user == null)
             {
@@ -124,6 +158,21 @@ namespace _3NET_EventManagement.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             User user = db.Users.Find(id);
+
+            foreach(var item in user.Friends)
+            {
+                var userFriend = db.Users.Find(item.Id);
+                userFriend.Friends.Remove(user);
+            }
+            user.Friends.Clear();
+            
+            var listOfInvitations = db.Invitations.Where(x => x.UserId == id).ToList();
+            foreach (var item in listOfInvitations)
+                db.Invitations.Remove(item);
+            var listOfContributions = db.Contributions.Where(x => x.UserId == id).ToList();
+            foreach (var item in listOfContributions)
+                db.Contributions.Remove(item);
+
             db.Users.Remove(user);
             db.SaveChanges();
             

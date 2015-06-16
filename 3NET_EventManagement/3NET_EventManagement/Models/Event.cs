@@ -9,10 +9,7 @@ namespace _3NET_EventManagement.Models
 {
     public class Event
     {
-        public Event()
-        {
-            InvitedUsers = new HashSet<User>();
-        }
+        
 
         [HiddenInput(DisplayValue = false)]
         [Key]
@@ -25,7 +22,7 @@ namespace _3NET_EventManagement.Models
         public string Address { get; set; }
 
         [Display(Name = "Date")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd hh:mm}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
         public DateTime Date { get; set; }
 
         [Display(Name = "Summary")]
@@ -48,9 +45,19 @@ namespace _3NET_EventManagement.Models
         public virtual EventType Type { get; set; }
 
         // Un évenement possède plusieurs participants et contributions
-        [Display(Name = "Invited users")]
-        public virtual ICollection<User> InvitedUsers { get; set; }
+        //[Display(Name = "Invited users")]
+       // public virtual ICollection<User> InvitedUsers { get; set; }
 
         public virtual ICollection<Contribution> Contributions { get; set; }
+
+        public virtual ICollection<Invitation> Invitations { get; set; }
+
+        public Event()
+        {
+           // InvitedUsers = new HashSet<User>();
+            Contributions = new HashSet<Contribution>();
+            Invitations = new HashSet<Invitation>();
+        }
+       
     }
 }

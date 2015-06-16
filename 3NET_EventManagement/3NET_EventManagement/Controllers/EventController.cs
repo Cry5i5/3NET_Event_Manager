@@ -16,77 +16,81 @@ namespace _3NET_EventManagement.Controllers
     {
         private AppDbContext db = new AppDbContext();
 
-
-
         //
         // GET: /Event/
         public ActionResult Index()
         {
              User user = db.Users.Find(WebSecurity.GetUserId(User.Identity.Name));
              var events = db.Events.Include(e => e.Status).Include(e => e.Type).ToList();
+            // Si l'utilisateur est admin, alors il verra tous les évènements courants
             if (Roles.GetRolesForUser(User.Identity.Name).Contains("admin"))
             {
                 events = db.Events.Include(e => e.Status).Include(e => e.Type).ToList();
             }
+            // Sinon une opération de filtrage s'effectue, selon si on est le créateur de l'event ou si on est invité.
             else 
             {
+               // On récupère les events crées par l'utilisateur
                events = db.Events.Include(e => e.Status).Include(e => e.Type).Where( e => e.CreatorId == user.Id).ToList();
+                // Si il n'y en a pas on essaye de chercher s'il y a des events ou il est invité
                 if (events.ToList().Count == 0)
                 {
                    events = db.Events.Include(e => e.Status).Include(e => e.Type).ToList();
-                   var events2 = new List<Event>();
+                   var eventsTemp = new List<Event>();
                     int count = 0;
                     foreach(var item in events)
                     {
-                        foreach(var it2 in item.InvitedUsers)
+                        foreach(var it2 in item.Invitations)
                         {
-                            if ( it2.Id == user.Id)
+                            if ( it2.UserId == user.Id)
                             {
                                 count++;
                             }
                         }
                         if(count == 1)
                         {
-                            events2.Add(item);
+                            eventsTemp.Add(item);
                             count = 0;
                         }
                     }
-                    if (events2.Count() == 0)
+                    if (eventsTemp.Count() == 0)
                     {
                         events = new List<Event>();
                        
                     }
                     else
                     {
-                        events = events2;
+                        // on ajoute la liste des events ou on est invité si il y en a
+                        events = eventsTemp;
                     }
                  
 
                 }
+                // Si on possède des events dont on est l'owner, on va ajouter ceux ou on est invité
                 else
                 {
                     var events3 = db.Events.Include(e => e.Status).Include(e => e.Type).ToList();
-                   
-                    var events2 = new List<Event>();
+
+                    var eventsTemp = new List<Event>();
                     int count = 0;
                     foreach (var item in events3)
                     {
-                        foreach (var it2 in item.InvitedUsers)
+                        foreach (var it2 in item.Invitations)
                         {
-                            if (it2.Id == user.Id)
+                            if (it2.UserId == user.Id)
                             {
                                 count++;
                             }
                         }
                         if (count == 1)
                         {
-                            events2.Add(item);
+                            eventsTemp.Add(item);
                             count = 0;
                         }
                     }
-                    if (events2.Count() != 0)
+                    if (eventsTemp.Count() != 0)
                     {
-                      foreach(var item in events2)
+                      foreach (var item in eventsTemp)
                       {
                           if (events != null)
                           {
@@ -106,26 +110,7 @@ namespace _3NET_EventManagement.Controllers
          
             }
            
-            //int count = 0;
-            //foreach (var item in events)
-            //{
-            //    if (item.CreatorId != user.Id )
-            //    {
-            //        foreach( var invitedUser in item.InvitedUsers.ToList())
-            //        {
-            //           if (invitedUser.Id == user.Id)
-            //           {
-            //               count++;
-            //           }
-            //           if (count == 0)
-            //           {
-            //              events.ToList().Remove(item);
-            //           }
-            //        }
-                    
-            //    }
-                
-            //}
+            // On set un boolean pour dire l'utilisateur est le owner de l'event pour avoir des droits spécifiques dans l'affichage
             foreach(var item in events)
             {
                 if (item.CreatorId == user.Id || Roles.GetRolesForUser(User.Identity.Name).Contains("admin"))
@@ -150,6 +135,11 @@ namespace _3NET_EventManagement.Controllers
         public ActionResult Details(int id = 0)
         {
             Event @event = db.Events.Find(id);
+            foreach ( var item  in @event.Invitations.ToList())
+            {
+                item.User = db.Users.Find(item.UserId);
+                item.Event = db.Events.Find(item.EventId);
+            }
             if (@event == null)
             {
                 return HttpNotFound();
@@ -180,8 +170,7 @@ namespace _3NET_EventManagement.Controllers
             if (ModelState.IsValid)
             {
                 if (Roles.GetRolesForUser(User.Identity.Name).Contains("user"))
-                {
-
+                { 
                     @event.StatusId = 2;
                     @event.Creator = @user;
                    // @event.CreatorId = @user.Id;
@@ -212,12 +201,17 @@ namespace _3NET_EventManagement.Controllers
         public ActionResult Edit(int id = 0)
         {
             var editedEvent = db.Events.Find(id);
-           
-
             if (editedEvent == null)
             {
                 return HttpNotFound();
             }
+
+            foreach (var item in editedEvent.Invitations.ToList())
+            {
+                item.User = db.Users.Find(item.UserId);
+                item.Event = db.Events.Find(item.EventId);
+            }
+            
             ViewData["Event"] = editedEvent;
             ViewBag.StatusId = new SelectList(db.Statuses, "Id", "StatusName", editedEvent.StatusId);
             ViewBag.TypeId = new SelectList(db.EventTypes, "Id", "TypeName", editedEvent.TypeId);
@@ -233,20 +227,12 @@ namespace _3NET_EventManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Event eventSave = (Event)ViewBag.Event;
-               /* if (Event.Creator == null)
-                {
-                    Event.Creator = eventSave.Creator;
-                    Event.Status = eventSave.Status;
-                }*/
-                var test = ViewBag.eventModel;
+
                 editedEvent.Creator = db.Users.Find(editedEvent.CreatorId);
                 editedEvent.Status = db.Statuses.Find(editedEvent.StatusId);
-                
                 editedEvent.Type = db.EventTypes.Find(editedEvent.TypeId);
 
                 db.Entry(editedEvent).State = EntityState.Modified;
-             //  db.Entry(@event).Property("CreatorId").IsModified = false;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -275,7 +261,16 @@ namespace _3NET_EventManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Event @event = db.Events.Find(id);
+            Event @event = db.Events.Include(e => e.Invitations).Include(e => e.Contributions).Where( e => e.Id == id).FirstOrDefault();
+
+            // On vire les invitations et les contributions existantes
+            var listOfInvitations   =  db.Invitations.Where(x => x.EventId == id).ToList();
+            foreach (var item in listOfInvitations)
+                db.Invitations.Remove(item);
+            var listOfContributions = db.Contributions.Where(x => x.EventId == id).ToList();
+            foreach (var item in listOfContributions)
+                db.Contributions.Remove(item);
+
             db.Events.Remove(@event);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -283,10 +278,11 @@ namespace _3NET_EventManagement.Controllers
         //
         // POST: /Event/LockOrUnLock/5
 
-        [HttpPost, ActionName("LockOrUnLock")]
-        [ValidateAntiForgeryToken]
+        //[HttpPost, ActionName("LockOrUnLock")]
+       // [ValidateAntiForgeryToken]
         public ActionResult LockOrUnLock(int id)
         {
+            // On va changer le status selon le status en cours, Pending => Open, Open => Pending
             Event @event = db.Events.Find(id);
             if (@event.Status.StatusName.Equals("Pending"))
             {
@@ -300,6 +296,7 @@ namespace _3NET_EventManagement.Controllers
             }
             db.Entry(@event).State = EntityState.Modified;
             db.SaveChanges();
+
             return RedirectToAction("Index");
         }
 
@@ -310,17 +307,25 @@ namespace _3NET_EventManagement.Controllers
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
             }
             Event newEvent = db.Events.Find(id);
             if (newEvent == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.FriendUserId = new SelectList(db.Users.Find(WebSecurity.GetUserId(User.Identity.Name)).Friends, "Id", "UserName");
+            var listOfFriendToInvite = db.Users.Find(WebSecurity.GetUserId(User.Identity.Name)).Friends;
+            var filteredListOfFriendToInvite = new List<User>();
+            foreach(var item in listOfFriendToInvite)
+            {
+                if (item.EventsInvitedTo.Where(x => x.EventId == newEvent.Id).FirstOrDefault() == null)
+                        filteredListOfFriendToInvite.Add(item);
+                    
+                
+            }
+            ViewBag.FriendUserId = new SelectList(filteredListOfFriendToInvite, "Id", "UserName");
             return View();
-
         }
+
         //
         // POST: /Event/InviteFriend
         [HttpPost]
@@ -338,12 +343,13 @@ namespace _3NET_EventManagement.Controllers
                 return HttpNotFound();
             }
             if (ModelState.IsValid) {
-
+                // On ajoute notre ami dans les invitations.
                 int friendId = int.Parse(friend.FriendUserId);
                 User friendInvited = db.Users.Where(x => x.Id == friendId ).FirstOrDefault();
 
-                friendInvited.EventsInvitedTo.Add(newEvent);
-                newEvent.InvitedUsers.Add(friendInvited);
+                friendInvited.EventsInvitedTo.Add(new Invitation { Event = newEvent, User = friendInvited, UserId = friendInvited.Id, EventId = newEvent.Id });
+                //newEvent.Invitations  = friendInvited.EventsInvitedTo; //
+                //.Add(new Invitation {Event= newEvent, User= friendInvited, UserId = friendInvited.Id, EventId = newEvent.Id });
                 db.SaveChanges();
 
                 return RedirectToAction("Index");

@@ -5,7 +5,7 @@
 }
 
 <hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
+    <h1>@ViewBag.Title  </h1>
 </hgroup>
 
 <section id="loginForm">
@@ -19,11 +19,13 @@
         <ol>
             <li>
                 @Html.LabelFor(m => m.UserName)
+                <br />
                 @Html.TextBoxFor(m => m.UserName)
                 @Html.ValidationMessageFor(m => m.UserName)
             </li>
             <li>
                 @Html.LabelFor(m => m.Password)
+                <br />
                 @Html.PasswordFor(m => m.Password)
                 @Html.ValidationMessageFor(m => m.Password)
             </li>
@@ -32,10 +34,12 @@
                 @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
             </li>
         </ol>
-        <input type="submit" value="Log In" />
+        <input type="submit" value="Log In" class="btn btn-primary"  />
     </fieldset>
     <p>
+        <br />
         @Html.ActionLink("Register", "Register") if you have not an account.
+        <br />
         @Html.ActionLink("Register", "AdminRegister") if you are an administrator.
     </p>
 }

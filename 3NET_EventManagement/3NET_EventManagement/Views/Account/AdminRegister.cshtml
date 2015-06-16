@@ -4,8 +4,11 @@
 }
 
 <hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
+    <h1>@ViewBag.Title</h1>
+    <hr />
+    <br />
     <h2>Create a new account</h2>
+   
 </hgroup>
 
 @using (Html.BeginForm())
@@ -18,23 +21,27 @@
         <ol>
             <li>
                 @Html.LabelFor(m => m.UserName)
+                <br />
                 @Html.TextBoxFor(m => m.UserName)
             </li>
             <li>
                 @Html.LabelFor(m => m.Name)
+                <br />
                 @Html.TextBoxFor(m => m.Name)
             </li>
 
             <li>
                 @Html.LabelFor(m => m.Password)
+                <br />
                 @Html.PasswordFor(m => m.Password)
             </li>
             <li>
                 @Html.LabelFor(m => m.ConfirmPassword)
+                <br />
                 @Html.PasswordFor(m => m.ConfirmPassword)
             </li>
         </ol>
-        <input type="submit" value="S'inscrire" />
+        <input type="submit" value="S'inscrire en tant qu'administrateur" class="btn btn-success" />
     </fieldset>
 }
 

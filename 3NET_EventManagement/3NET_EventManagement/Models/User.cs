@@ -16,20 +16,21 @@ namespace _3NET_EventManagement.Models
 
         public string Name { get; set; }
         public string LastName { get; set; }
-
+        [EmailAddress]
         public string Email { get; set; }
 
         public int Age { get; set; }
 
-        //public string Password { get; set; }
-        public virtual ICollection<Event> EventsInvitedTo { get; set; }
+        public bool isAdmin { get; set; }
+
+        public virtual ICollection<Invitation> EventsInvitedTo { get; set; }
         public virtual IList<User> Friends { get; set; }
 
         public virtual ICollection<Contribution> Contributions { get; set; }
 
         public User()
         {
-            EventsInvitedTo = new HashSet<Event>();
+            EventsInvitedTo = new HashSet<Invitation>();
             Contributions = new HashSet<Contribution>();
         }
     }

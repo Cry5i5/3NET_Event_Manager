@@ -89,7 +89,7 @@
                     @Html.ActionLink("Invite Friend", "InviteFriend", new { id = item.Id }, new { @class = "btn btn-warning btn-sm" })
                 }
 
-                @if (item.InvitedUsers.Where(x => x.Id == WebSecurity.GetUserId(User.Identity.Name)).FirstOrDefault() != null)
+                @if (item.Invitations.Where(x => x.UserId == WebSecurity.GetUserId(User.Identity.Name)).FirstOrDefault() != null)
                 {
 
                     @Html.ActionLink("Add Contribution", "Create", "Contribution", new { id = item.Id }, new { @class="btn btn-info btn-sm" })

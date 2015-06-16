@@ -4,11 +4,17 @@
 }
 
 <hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
+    <h1>@ViewBag.Title</h1>
+    <hr />  
+    <br />
     <h2>Create a new account an join our community</h2>
 </hgroup>
 <p style="color:red">
     @ViewBag.error
+</p>
+<p>
+    
+    @Html.ActionLink("Register for admin", "AdminRegister") if you are an administrator.
 </p>
 
 @using (Html.BeginForm()) {
@@ -40,7 +46,7 @@
                 @Html.PasswordFor(m => m.ConfirmPassword)
             </li>
         </ol>
-        <input type="submit" value="Register" />
+        <input type="submit" value="Register"  class="btn btn-warning"/>
     </fieldset>
 }
 

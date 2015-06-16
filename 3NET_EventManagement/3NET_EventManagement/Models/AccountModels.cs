@@ -8,24 +8,6 @@ using System.Web.Security;
 
 namespace _3NET_EventManagement.Models
 {
-   /* public class UsersContext : DbContext
-    {
-        public UsersContext()
-            : base("DefaultConnection")
-        {
-        }
-
-        public DbSet<UserProfile> UserProfiles { get; set; }
-    }
-
-    [Table("UserProfile")]
-    public class UserProfile
-    {
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int UserId { get; set; }
-        public string UserName { get; set; }
-    }*/
 
     public class RegisterExternalLoginModel
     {
@@ -111,6 +93,8 @@ namespace _3NET_EventManagement.Models
         public int Age { get; set; }
         [Required]
         [Display(Name = "Email")]
+        [StringLength(100, ErrorMessage = "Email incorrect.", MinimumLength = 6)]
+        [EmailAddress]
         public string Email { get; set; }
 
         //[Required]

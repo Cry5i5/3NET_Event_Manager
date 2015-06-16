@@ -26,9 +26,10 @@ namespace _3NET_EventManagement
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
 
-            //Database.SetInitializer(new ApplicationDbContextInitializer());
-           // Database.SetInitializer<AppDbContext>(new ApplicationDbContextInitializer());
-            Database.SetInitializer<AppDbContext>(new System.Data.Entity.CreateDatabaseIfNotExists<AppDbContext>());
+            Database.SetInitializer(new ApplicationDbContextInitializer());
+            
+            //Database.SetInitializer<AppDbContext>(new ApplicationDbContextInitializer());
+            //Database.SetInitializer<AppDbContext>(new System.Data.Entity.CreateDatabaseIfNotExists<AppDbContext>());
 
         }
     }

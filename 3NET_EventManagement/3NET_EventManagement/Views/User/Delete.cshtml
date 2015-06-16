@@ -10,15 +10,15 @@
 <fieldset>
     <legend>User</legend>
 
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.UserName)
+    <div class="editor-label">
+         @Html.LabelFor(model => model.UserName)
     </div>
     <div class="display-field">
         @Html.DisplayFor(model => model.UserName)
     </div>
 
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Name)
+    <div class="editor-label">
+         @Html.LabelFor(model => model.Name)
     </div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Name)
@@ -27,7 +27,7 @@
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
     <p>
-        <input type="submit" value="Delete" /> |
+        <input type="submit" value="Delete" class="btn btn-danger"   /> |
         @Html.ActionLink("Back to List", "Index")
     </p>
 }

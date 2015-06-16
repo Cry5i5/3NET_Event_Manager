@@ -12,6 +12,8 @@ namespace _3NET_EventManagement.Models
     {
         public AppDbContext() : base("DefaultConnection")
         {
+            Configuration.ProxyCreationEnabled = true;
+            Configuration.LazyLoadingEnabled = true;
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Status> Statuses { get; set; }
@@ -19,25 +21,33 @@ namespace _3NET_EventManagement.Models
         public DbSet<Event> Events { get; set; }
         public DbSet<ContributionType> ContributionTypes { get; set; }
         public DbSet<Contribution> Contributions { get; set; }
+        public DbSet<Invitation> Invitations { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            // on set les contraintes pour éviter les soucis en cas de suppression en cascade
             modelBuilder.Entity<User>().HasMany(u => u.Friends).WithMany();
-            modelBuilder.Entity<Event>()
-                .HasMany<User>(e => e.InvitedUsers)
-                .WithMany(u => u.EventsInvitedTo)
-                .Map(c =>
-                {
-                    c.MapLeftKey("Event_id");
-                    c.MapRightKey("User_id");
-                    c.ToTable("Invitations");
-                });
+            modelBuilder.Entity<Contribution>().HasRequired(c => c.User).WithMany(c => c.Contributions).HasForeignKey(c => c.UserId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Invitation>().HasRequired(c => c.Event).WithMany(c => c.Invitations).HasForeignKey(c => c.EventId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Invitation>().HasRequired(c => c.User).WithMany(c => c.EventsInvitedTo).HasForeignKey(c => c.UserId).WillCascadeOnDelete(false);
+          
+           
         }
+       
     }
 
     public class ApplicationDbContextInitializer : DropCreateDatabaseIfModelChanges<AppDbContext>
     {
+
+        public ApplicationDbContextInitializer()
+        {
+            using (var db = new AppDbContext())
+            {
+                Seed(db);
+            }
+        }
+       
         protected override void Seed(AppDbContext context)
         {
             var statuses = new List<Status>
@@ -62,23 +72,29 @@ namespace _3NET_EventManagement.Models
                 new ContributionType {Id = 3, ContributionTypeName = "Soft drink"},
                 new ContributionType {Id = 4, ContributionTypeName = "Hard drink"}
             };
-
-            foreach (ContributionType r in contributionTypes)
+            if (context.ContributionTypes.Count() == 0 && context.Statuses.Count() == 0 && context.EventTypes.Count() == 0)
             {
-                context.ContributionTypes.Add(r);
-            }
 
-            foreach (Status r in statuses)
-            {
-                context.Statuses.Add(r);
-            }
 
-            foreach (EventType r in eventTypes)
-            {
-                context.EventTypes.Add(r);
-            }
+                foreach (ContributionType r in contributionTypes)
+                {
+                    
+                        context.ContributionTypes.Add(r);
+                }
 
-            context.SaveChanges();
+                foreach (Status r in statuses)
+                {
+                        context.Statuses.Add(r);
+                }
+
+                foreach (EventType r in eventTypes)
+                {
+                    
+                        context.EventTypes.Add(r);
+                }
+
+                context.SaveChanges();
+            }
         }
     }
 

@@ -16,10 +16,14 @@
             @Html.DisplayNameFor(model => model.Event.EventName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Type.ContributionTypeName)
+            @Html.DisplayNameFor(model => model.Amount)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Amount)
+            @Html.DisplayNameFor(model => model.Type.ContributionTypeName)
+        </th>
+      
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
         </th>
        
         
@@ -37,6 +41,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Type.ContributionTypeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) 

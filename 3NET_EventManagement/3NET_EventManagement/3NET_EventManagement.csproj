@@ -191,13 +191,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201505241005307_Create Database.cs" />
-    <Compile Include="Migrations\201505241005307_Create Database.Designer.cs">
-      <DependentUpon>201505241005307_Create Database.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505261415374_Update User Table.cs" />
-    <Compile Include="Migrations\201505261415374_Update User Table.Designer.cs">
-      <DependentUpon>201505261415374_Update User Table.cs</DependentUpon>
+    <Compile Include="Migrations\201505301256410_Update isAdmin.cs" />
+    <Compile Include="Migrations\201505301256410_Update isAdmin.Designer.cs">
+      <DependentUpon>201505301256410_Update isAdmin.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -208,12 +204,17 @@
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\EventModel.cs" />
     <Compile Include="Models\EventType.cs" />
+    <Compile Include="Models\Invitation.cs" />
     <Compile Include="Models\InviteFriendModel.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\3NET_EventManagement.mdf" />
+    <Content Include="App_Data\3NET_EventManagement_log.ldf">
+      <DependentUpon>3NET_EventManagement.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -353,18 +354,12 @@
     <Content Include="Views\Contribution\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <EmbeddedResource Include="Migrations\201505301256410_Update isAdmin.resx">
+      <DependentUpon>201505301256410_Update isAdmin.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201505241005307_Create Database.resx">
-      <DependentUpon>201505241005307_Create Database.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505261415374_Update User Table.resx">
-      <DependentUpon>201505261415374_Update User Table.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

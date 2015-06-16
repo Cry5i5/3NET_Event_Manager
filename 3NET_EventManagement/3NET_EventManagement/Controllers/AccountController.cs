@@ -89,6 +89,7 @@ namespace _3NET_EventManagement.Controllers
                     User u = new User();
                     u.UserName = model.UserName;
                     u.Name = model.Name;
+                    u.isAdmin = true;
                     using (AppDbContext db = new AppDbContext())
                     {
                         db.Users.Add(u);
@@ -102,8 +103,6 @@ namespace _3NET_EventManagement.Controllers
                         Roles.CreateRole("admin");
                         Roles.CreateRole("user");
                     }
-
-                    
 
                     Roles.AddUserToRole(model.UserName, "admin");
 
@@ -184,6 +183,7 @@ namespace _3NET_EventManagement.Controllers
                     User u = new User();
                     u.UserName = model.UserName;
                     u.Name = model.Name;
+                    u.isAdmin = false;
                     using ( AppDbContext db = new AppDbContext())
                     {
                         if (db.Users.Where(x => x.UserName == u.UserName).FirstOrDefault() != null)
@@ -289,7 +289,6 @@ namespace _3NET_EventManagement.Controllers
                     bool changePasswordSucceeded;
                     try
                     {
-                      
                         changePasswordSucceeded = WebSecurity.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
                     }
                     catch (Exception)

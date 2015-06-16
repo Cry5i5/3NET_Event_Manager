@@ -90,18 +90,19 @@ else
         <h3>
             Invited Friends
         </h3>
-        <table>
-        @foreach (var item in Model.InvitedUsers) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
+        <table class="table table-bordered">
+            @foreach (var item in Model.Invitations.Where(e => e.EventId == Model.Id).ToList())
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.UserName)
+                    </td>
 
-            </tr>
-        }
+                </tr>
+            }
         </table>
                 <p>
-                    <input type="submit" value="Save" />
+                    <input type="submit" value="Save" class="btn btn-success" />
                 </p>
         </fieldset>
 }

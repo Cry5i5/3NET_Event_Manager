@@ -37,6 +37,12 @@
     <div class="display-field">
         @Html.DisplayFor(model => model.Type.ContributionTypeName)
     </div>
+    <div class="display-label">
+        <h4> @Html.DisplayNameFor(model => model.Description)</h4>
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Description)
+    </div>
 </fieldset>
 <br />
 @using (Html.BeginForm()) {

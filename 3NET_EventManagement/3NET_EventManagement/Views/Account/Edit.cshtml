@@ -9,7 +9,7 @@
     @Html.AntiForgeryToken()
     <h4>Edit your account.</h4>
     <hr />
-    @Html.ValidationSummary()
+    @Html.ValidationSummary(true)
     
     <p> @ViewBag.StatusMessage </p>
     <div class="form-group">
@@ -21,25 +21,29 @@
     <div class="form-group">
         @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            @Html.EditorFor(m => m.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Name)
         </div>
     </div>
      <div class="form-group">
         @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+            @Html.EditorFor(m => m.LastName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.LastName)
         </div>
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            @Html.EditorFor(m => m.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Email)
         </div>
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Age, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Age, new { @class = "form-control" })
+            @Html.EditorFor(m => m.Age, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Age)
         </div>
     </div>
     <div class="form-group">

@@ -63,57 +63,22 @@ namespace _3NET_EventManagement.Controllers
             return View();
         }
 
-        //
+        // Action link avec l'action Add
         // GET: /Friend/Add/5
-
-       /* public ActionResult Add(int id = 0)
-        {
-            User friend = db.Users.Find(id);
-            if (friend == null)
-            {
-                return HttpNotFound();
-            }
-            return View(friend);
-        }*/
-        //
-        // POST: /Friend/Add
-
-       //[HttpPost, ActionName("Add")]
-       //[ValidateAntiForgeryToken]
         public ActionResult Add(int id)
         {
             try
             {
-               // if (!ModelState.IsValid) return View();
-
-              /*  User friend  = (from u in db.Users
-                               where u.UserName.Equals(addFriendViewModel.FriendName) || u.Name.Equals(addFriendViewModel.FriendName)
-                               select u).FirstOrDefault();
-
-                User currentUser = db.Users.Find(WebSecurity.GetUserId(User.Identity.Name));
-                
-                // Si l'utilisateur n 'existe pas 
-                if (friend == null)
-                {
-                    ViewData["error"] = " User not found, please try other username.";
-                    return View();
-                }
-                // Si l'utilisateur est l'utilisateur qui a fait la demande
-                if (friend.Id == currentUser.Id)
-                {
-                    ViewData["error"] = " You can't yourself as a friend.";
-                    return View();               
-                }
-                // Si l'utilisateur est déjà dans la liste d'amis
-                if (currentUser.Friends.ToList().Any(u => u.Id.Equals(friend.Id)))
-                {
-                    ViewData["error"] = "User already exists in your friends list.";
-                    return View();
-                }
-                // Sinon on ajoute l'ami dans la liste d'amis de l'utilisateur courant*/
+               
                 User currentUser = db.Users.Find(WebSecurity.GetUserId(User.Identity.Name));
                 User friend = db.Users.Find(id);
+                // Lorsqu'on ajoute un ami, on est automatiquement ajouté en tant qu'ami chez la personne en face
                 currentUser.Friends.Add(friend);
+                if(friend.Friends.Where( x => x.Id == currentUser.Id).FirstOrDefault() == null)
+                {
+                    friend.Friends.Add(currentUser);
+                }
+                
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -131,13 +96,14 @@ namespace _3NET_EventManagement.Controllers
         {
             
                 if (!ModelState.IsValid) return View();
-
+                // On recherche les amis selon l username , le nom et le prenom
                 List<User> friends =  (from u in db.Users
-                                            where u.UserName.Contains(addFriendViewModel.FriendName) || u.Name.Contains(addFriendViewModel.FriendName)
+                                            where u.UserName.Contains(addFriendViewModel.FriendName) || u.Name.Contains(addFriendViewModel.FriendName) || u.LastName.Contains(addFriendViewModel.FriendName)
                                             select u).ToList();
 
+             
                 User currentUser = db.Users.Find(WebSecurity.GetUserId(User.Identity.Name));
-
+              
                 if (friends.Count() == 0)
                 {
                     // Si l'utilisateur n 'existe pas 
@@ -148,12 +114,12 @@ namespace _3NET_EventManagement.Controllers
                 List<User> listOfFriends = currentUser.Friends.ToList();
                 foreach(User item in friends)
                 {
-                   
-                    if (item.Id != currentUser.Id  )
+                   // Si ce n'est pas l'utilisateur connecté
+                    if (item.Id != currentUser.Id)
                     {
                      filteredFriends.Add(item);  
                     }
-
+                    // On récupère et filtre par rapport aux amis déjà ajoutés
                     foreach (var friend in listOfFriends)
                     {
                         if (friend.Id == item.Id)
@@ -161,15 +127,16 @@ namespace _3NET_EventManagement.Controllers
                             filteredFriends.Remove(item);
                         }
                     }
-                    if (filteredFriends.Count == 0)
-                    {
-                        ViewData["error"] = " User not found, please try other username.";
-                        return View();
-                    }
+                   
                        
                 }
+                if (filteredFriends.Count == 0)
+                {
+                    ViewData["error"] = " User not found, please try other username.";
+                    return View();
+                }
 
-                //ViewData["friendsFoundList"] = filteredFriends;
+                
                 return View("SearchResults", filteredFriends.ToList());
             
         }
@@ -199,31 +166,5 @@ namespace _3NET_EventManagement.Controllers
                 return View();
             }
         }
-
-        //
-        // GET: /Friend/Delete/5
-
-       /* public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        //
-        // POST: /Friend/Delete/5
-
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }*/
     }
 }

@@ -19,8 +19,8 @@ namespace _3NET_EventManagement.Controllers
 
         public ActionResult Index(int id = 0)
         {
-
-            var contributions = db.Contributions.Include(c => c.Event).Include(c => c.Type).Where(c => c.EventId == id);
+            int userId =  WebSecurity.GetUserId(User.Identity.Name);
+            var contributions = db.Contributions.Include(c => c.Event).Include(c => c.Type).Where(c => c.EventId == id && c.UserId == userId);
             return View(contributions.ToList());
         }
 
@@ -60,9 +60,11 @@ namespace _3NET_EventManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Contribution contribution)
         {
+            // on set l'utilisateur , l'event et le type concerné
             contribution.User = db.Users.Find(WebSecurity.GetUserId(User.Identity.Name));
             contribution.Event = db.Events.Find(contribution.EventId);
             contribution.Type = db.ContributionTypes.Find(contribution.TypeId);
+
             if (contribution.Type != null && contribution.User != null && contribution.Event != null)
             {
                 db.Contributions.Add(contribution);
@@ -97,6 +99,7 @@ namespace _3NET_EventManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Contribution contribution)
         {
+            // on set l'utilisateur , l'event 
             contribution.User = db.Users.Find(contribution.UserId);
             contribution.Event = db.Events.Find(contribution.EventId);
             if (contribution.User != null && contribution.Event != null)

@@ -26,5 +26,10 @@ namespace _3NET_EventManagement.Models
 
         public int TypeId { get; set; }
         public virtual ContributionType Type { get; set; }
+
+        public Contribution()
+        {
+
+        }
     }
 }
